@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.dubbo.gateway.admin.repository.mapper.EventContentMapper">
+
+    <insert id="insert">
+        INSERT INTO event_content (
+            `event_key`,
+            `version`,
+            `content`
+        ) VALUES (
+            #{eventKey},
+            #{version},
+            #{content}
+        )
+    </insert>
+
+    <select id="queryAfter" resultType="org.apache.dubbo.gateway.admin.repository.model.EventMessageDO">
+        <if test="forceMaster">/*{"router":"m"}*/</if>
+        SELECT *
+        FROM event_content
+        WHERE event_key = #{eventKey}
+        AND version > #{version}
+    </select>
+
+</mapper>

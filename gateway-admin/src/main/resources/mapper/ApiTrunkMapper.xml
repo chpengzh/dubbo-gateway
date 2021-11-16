@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.dubbo.gateway.admin.repository.mapper.ApiTrunkMapper">
+
+    <select id="getApiTrunk" resultType="org.apache.dubbo.gateway.admin.repository.model.ApiTrunkDO">
+        <if test="lock">/*{"router":"m"}*/</if>
+        SELECT *
+        FROM api_trunk
+        WHERE api_name = #{apiName}
+        <if test="lock">FOR UPDATE</if>
+    </select>
+
+    <update id="create">
+        INSERT INTO api_trunk
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="releaseVersion!=null">release_version,</if>
+            <if test="apiName!=null">api_name,</if>
+            <if test="dubboService!=null">dubbo_service,</if>
+            <if test="dubboMethod!=null">dubbo_method,</if>
+            <if test="owner!=null">owner,</if>
+            <if test="modifyUser!=null">modify_user,</if>
+            <if test="description!=null">description,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="releaseVersion!=null">#{releaseVersion},</if>
+            <if test="apiName!=null">#{apiName},</if>
+            <if test="dubboService!=null">#{dubboService},</if>
+            <if test="dubboMethod!=null">#{dubboMethod},</if>
+            <if test="owner!=null">#{owner},</if>
+            <if test="modifyUser!=null">#{modifyUser},</if>
+            <if test="description!=null">#{description},</if>
+        </trim>
+    </update>
+
+    <update id="update">
+        UPDATE api_trunk
+        SET
+        <trim suffixOverrides=",">
+            <if test="releaseVersion!=null">release_version = #{releaseVersion},</if>
+            <if test="dubboService!=null">dubbo_service = #{dubboService},</if>
+            <if test="dubboMethod!=null">dubbo_method = #{dubboMethod},</if>
+            <if test="owner!=null">owner = #{owner},</if>
+            <if test="modifyUser!=null">modify_user = #{modifyUser},</if>
+            <if test="description!=null">description = #{description},</if>
+        </trim>
+        WHERE api_name = #{apiName}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM api_trunk
+        WHERE api_name = #{apiName}
+    </delete>
+
+    <select id="keywordQuery" resultType="org.apache.dubbo.gateway.admin.repository.model.ApiTrunkDO">
+        SELECT *
+        FROM api_trunk
+        WHERE `release_version` = #{keyword}
+           OR `api_name` like concat('%', #{keyword}, '%')
+           OR `dubbo_service` like concat('%', #{keyword}, '%')
+        ORDER BY `gmt_modify` DESC
+        LIMIT #{offset},#{limit}
+    </select>
+
+
+    <select id="query" resultType="org.apache.dubbo.gateway.admin.repository.model.ApiTrunkDO">
+        SELECT *
+        FROM api_trunk
+        <trim prefix="WHERE " prefixOverrides="AND">
+            <if test="releaseVersion != null">AND `release_version` = #{releaseVersion}</if>
+            <if test="apiName != null">AND `api_name` = #{apiName}</if>
+            <if test="dubboService != null">AND `dubbo_service` = #{dubboService}</if>
+            <if test="dubboMethod != null">AND `dubbo_method` = #{dubboMethod}</if>
+        </trim>
+        ORDER BY `gmt_modify` DESC
+        LIMIT #{offset},#{limit}
+    </select>
+</mapper>

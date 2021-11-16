@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.dubbo.gateway.admin.repository.mapper.ApproveProcessMapper">
+
+    <select id="getByApproveId" resultType="org.apache.dubbo.gateway.admin.repository.model.ApproveProcessDO">
+        /*{"router":"m"}*/
+        SELECT *
+        FROM approve_process
+        WHERE approve_id = #{approveId}
+            FOR
+        UPDATE
+    </select>
+
+    <select id="getLockedProcess" resultType="org.apache.dubbo.gateway.admin.repository.model.ApproveProcessDO">
+        /*{"router":"m"}*/
+        SELECT *
+        FROM approve_process
+        WHERE lock_key = #{lockKey}
+          AND result = 0
+        LIMIT 1
+            FOR
+        UPDATE
+    </select>
+
+    <select id="query" resultType="org.apache.dubbo.gateway.admin.repository.model.ApproveProcessDO">
+        SELECT *
+        FROM approve_process
+        WHERE 1 = 1
+        <if test="approveIds != null and !approveIds.isEmpty()">
+            AND `approve_id` IN
+            <foreach collection="approveIds" item="id" open="(" separator="," close=")">#{id}</foreach>
+        </if>
+        <if test="type != null">AND `type` = #{type}</if>
+        <if test="result != null">AND `result` = #{result}</if>
+        ORDER BY `id` DESC
+        LIMIT #{offset},#{limit}
+    </select>
+
+    <insert id="create">
+        INSERT
+        INTO approve_process
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="approveId != null">approve_id,</if>
+            <if test="url != null">url,</if>
+            <if test="type != null">`type`,</if>
+            <if test="linkId != null">`link_id`,</if>
+            <if test="username != null">`username`,</if>
+            <if test="payload != null">`payload`,</if>
+            <if test="lockKey != null">`lock_key`,</if>
+            <if test="result != null">`result`,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="approveId != null">#{approveId},</if>
+            <if test="url != null">#{url},</if>
+            <if test="type != null">#{type},</if>
+            <if test="linkId != null">#{linkId},</if>
+            <if test="username != null">#{username},</if>
+            <if test="payload != null">#{payload},</if>
+            <if test="lockKey != null">#{lockKey},</if>
+            <if test="result != null">#{result},</if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        UPDATE approve_process
+        SET
+        <trim suffixOverrides=",">
+            <if test="url != null">url = #{url},</if>
+            <if test="type != null">`type` = #{type},</if>
+            <if test="linkId != null">`link_id` = #{linkId},</if>
+            <if test="username != null">`username` = #{username},</if>
+            <if test="payload != null">`payload` = #{payload},</if>
+            <if test="lockKey != null">`lock_key` = #{lockKey},</if>
+            <if test="result != null">`result` = #{result},</if>
+        </trim>
+        WHERE approve_id = #{approveId}
+    </update>
+</mapper>

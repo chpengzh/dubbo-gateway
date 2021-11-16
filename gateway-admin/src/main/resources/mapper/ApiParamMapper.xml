@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.dubbo.gateway.admin.repository.mapper.ApiParamMapper">
+    <insert id="createApiParam" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        INSERT INTO api_param
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="uuid != null">`uuid`,</if>
+            <if test="parentUuid != null">`parent_uuid`,</if>
+            <if test="apiName != null">`api_name`,</if>
+            <if test="sourceName != null">`source_name`,</if>
+            <if test="paramType != null">`param_type`,</if>
+            <if test="destName != null">`dest_name`,</if>
+            <if test="defaultValue != null">`default_value`,</if>
+            <if test="required != null">`required`,</if>
+            <if test="className != null">`class_name`,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="uuid != null">#{uuid},</if>
+            <if test="parentUuid != null">#{parentUuid},</if>
+            <if test="apiName != null">#{apiName},</if>
+            <if test="sourceName != null">#{sourceName},</if>
+            <if test="paramType != null">#{paramType},</if>
+            <if test="destName != null">#{destName},</if>
+            <if test="defaultValue != null">#{defaultValue},</if>
+            <if test="required != null">#{required},</if>
+            <if test="className != null">#{className},</if>
+        </trim>
+    </insert>
+
+    <delete id="deleteByApi">
+        DELETE
+        FROM api_param
+        WHERE `api_name` = #{apiName}
+    </delete>
+
+    <select id="queryByApi" resultType="org.apache.dubbo.gateway.admin.repository.model.ApiParamDO">
+        SELECT *
+        FROM api_param
+        WHERE `api_name` = #{apiName}
+        ORDER BY `id` ASC
+    </select>
+</mapper>

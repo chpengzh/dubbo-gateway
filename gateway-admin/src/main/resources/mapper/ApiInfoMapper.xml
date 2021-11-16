@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.dubbo.gateway.admin.repository.mapper.ApiInfoMapper">
+
+    <select id="query" resultType="org.apache.dubbo.gateway.admin.repository.model.ApiInfoDO">
+        SELECT *
+        FROM api_info
+        ORDER BY `id` DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="keywordQuery" resultType="org.apache.dubbo.gateway.admin.repository.model.ApiInfoDO">
+        SELECT *
+        FROM api_info
+        WHERE (
+            api_name like concat('%', #{keyword}, '%')
+            OR service_name like concat('%', #{keyword}, '%')
+        )
+        AND `online` = 1
+        ORDER BY `id` DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <insert id="createApi" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        INSERT
+        INTO api_info
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="apiName != null">`api_name`,</if>
+            <if test="serviceName != null">`service_name`,</if>
+            <if test="serviceVersion != null">`service_version`,</if>
+            <if test="serviceGroup != null">`service_group`,</if>
+            <if test="method != null">`method`,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="apiName != null">#{apiName},</if>
+            <if test="serviceName != null">#{serviceName},</if>
+            <if test="serviceVersion != null">#{serviceVersion},</if>
+            <if test="serviceGroup != null">#{serviceGroup},</if>
+            <if test="method != null">#{method},</if>
+        </trim>
+    </insert>
+
+    <update id="updateApi">
+        UPDATE api_info
+        SET
+        <trim suffixOverrides=",">
+            <if test="serviceName != null">`service_name` = #{serviceName},</if>
+            <if test="serviceVersion != null">`service_version` = #{serviceVersion},</if>
+            <if test="serviceGroup != null">`service_group` = #{serviceGroup},</if>
+            <if test="method != null">`method` = #{method},</if>
+        </trim>
+        WHERE `api_name` = #{apiName}
+    </update>
+
+    <delete id="deleteApi">
+        DELETE FROM api_info
+        WHERE `api_name` = #{apiName}
+    </delete>
+</mapper>

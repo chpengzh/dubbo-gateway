@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.dubbo.gateway.admin.repository.mapper.ApiArtifactMapper">
+
+    <select id="getByReleaseVersion" resultType="org.apache.dubbo.gateway.admin.repository.model.ApiArtifactDO">
+        SELECT *
+        FROM api_artifact
+        WHERE release_version = #{releaseVersion}
+    </select>
+
+    <select id="query" resultType="org.apache.dubbo.gateway.admin.repository.model.ApiArtifactDO">
+        SELECT *
+        FROM api_artifact
+        WHERE 1 = 1
+        <trim>
+            <if test="releaseVersion != null">AND release_version = #{releaseVersion}</if>
+            <if test="apiName != null">AND api_name = #{apiName}</if>
+            <if test="approveId != null">AND approve_id = #{approveId}</if>
+            <if test="dubboService != null">AND dubbo_service = #{dubboService}</if>
+            <if test="dubboMethod != null">AND dubbo_method = #{dubboMethod}</if>
+            <if test="approveResult != null">AND approve_result = #{approveResult}</if>
+        </trim>
+        ORDER BY `gmt_modify` DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <insert id="create">
+        INSERT INTO api_artifact
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="releaseVersion != null">`release_version`,</if>
+            <if test="apiName != null">`api_name`,</if>
+            <if test="dubboService != null">`dubbo_service`,</if>
+            <if test="dubboMethod != null">`dubbo_method`,</if>
+            <if test="dubboGroup != null">`dubbo_group`,</if>
+            <if test="dubboVersion != null">`dubbo_version`,</if>
+            <if test="params != null">`params`,</if>
+            <if test="approveId != null">`approve_id`,</if>
+            <if test="approveStart != null">`approve_start`,</if>
+            <if test="approveSuccess != null">`approve_success`,</if>
+            <if test="approveUser != null">`approve_user`,</if>
+            <if test="approveResult != null">`approve_result`,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="releaseVersion != null">#{releaseVersion},</if>
+            <if test="apiName != null">#{apiName},</if>
+            <if test="dubboService != null">#{dubboService},</if>
+            <if test="dubboMethod != null">#{dubboMethod},</if>
+            <if test="dubboGroup != null">#{dubboGroup},</if>
+            <if test="dubboVersion != null">#{dubboVersion},</if>
+            <if test="params != null">#{params},</if>
+            <if test="approveId != null">#{approveId},</if>
+            <if test="approveStart != null">#{approveStart},</if>
+            <if test="approveSuccess != null">#{approveSuccess},</if>
+            <if test="approveUser != null">#{approveUser},</if>
+            <if test="approveResult != null">#{approveResult},</if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        UPDATE api_artifact
+        SET
+        <trim suffixOverrides=",">
+            <if test="dubboService != null">dubbo_service = #{dubboService},</if>
+            <if test="dubboMethod != null">dubbo_method = #{dubboMethod},</if>
+            <if test="dubboGroup != null">dubbo_group = #{dubboGroup},</if>
+            <if test="params != null">params = #{params},</if>
+            <if test="approveId != null">approve_id = #{approveId},</if>
+            <if test="approveStart != null">approve_start = #{approveStart},</if>
+            <if test="approveSuccess != null">approve_success = #{approveSuccess},</if>
+            <if test="approveUser != null">approve_user = #{approveUser},</if>
+            <if test="approveResult != null">approve_result = #{approveResult},</if>
+        </trim>
+        WHERE release_version = #{releaseVersion}
+    </update>
+</mapper>
