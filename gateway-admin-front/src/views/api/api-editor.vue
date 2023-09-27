@@ -77,7 +77,7 @@
     components: {ApiRefLog, ApiForm},
     data() {
       return {
-        isSystemAdmin: getToken().isSystemAdmin,
+        isSystemAdmin: true,
         // 页面基础信息，
         meta: {
           apiName: '',

@@ -86,7 +86,7 @@ CREATE TABLE `api_info`
     `service_group`       varchar(256)        NOT NULL DEFAULT '' COMMENT 'Dubbo服务分组',
     `method`              varchar(100)        NOT NULL DEFAULT '' COMMENT 'dubbo方法名称',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `api` (`api_name`, `api_version`)
+    UNIQUE KEY `api` (`api_name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
     COMMENT ='生产环境接口数据表';

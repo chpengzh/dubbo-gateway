@@ -178,11 +178,6 @@
                     </configuration>
                     <dependencies>
                         <dependency>
-                            <groupId>com.didichuxing.framework</groupId>
-                            <artifactId>didi-checkstyle</artifactId>
-                            <version>base</version>
-                        </dependency>
-                        <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
                             <version>8.41.1</version>
